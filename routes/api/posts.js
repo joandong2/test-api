@@ -41,9 +41,13 @@ router.get("/:id", async (req, res) => {
 // Delete
 router.delete("/:id", async (req, res) => {
   try {
-    const posts = await Posts.findByIdAndDelete(req.params.id);
-    if (!posts) throw Error("No posts found!");
-    res.status(200).json({ success: true });
+    const post = await Posts.findByIdAndDelete(req.params.id);
+    if (!post) {
+      throw Error("No posts found!");
+    } else {
+      const posts = await Posts.find();
+      res.status(200).json(posts);
+    }
   } catch (err) {
     res.status(400).json({ msg: err });
   }
@@ -52,9 +56,13 @@ router.delete("/:id", async (req, res) => {
 // Update
 router.patch("/:id", async (req, res) => {
   try {
-    const posts = await Posts.findByIdAndUpdate(req.params.id, req.body);
-    if (!posts) throw Error("Something went wrong while updating the post!");
-    res.status(200).json({ success: true });
+    const post = await Posts.findByIdAndUpdate(req.params.id, req.body);
+    if (!post) {
+      throw Error("Something went wrong while updating the post!");
+    } else {
+      const posts = await Posts.find();
+      res.status(200).json(posts);
+    }
   } catch (err) {
     res.status(400).json({ msg: err });
   }
