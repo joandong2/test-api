@@ -26,12 +26,12 @@ const setPost = asyncHandler(async (req, res) => {
     throw new Error("Please add missing fields!");
   }
 
-  const Post = await Post.create({
+  const newPost = await Post.create({
     title: req.body.title,
     body: req.body.body,
   });
 
-  res.status(200).json(Post);
+  res.status(200).json(newPost);
 });
 
 const updatePost = asyncHandler(async (req, res) => {
