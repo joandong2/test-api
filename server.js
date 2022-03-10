@@ -1,31 +1,21 @@
-require("dotenv").config();
-
 const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
 
-// Routes
-const postsRoutes = require("./routes/api/posts");
+const dotenv = require("dotenv").config();
+const cors = require("cors");
+const { errorHandler } = require("./middleware/errorMiddleware");
+const connectDB = require("./config/db");
+const port = process.env.PORT || 5000;
+
+connectDB();
 
 const app = express();
-app.use(cors()); //cors
-app.use(express.json()); //body
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-// Connect to mongoDB
-mongoose
-  .connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected!"))
-  .catch((err) => console.log(err));
+app.use("/api/posts", require("./routes/Posts"));
+//app.use("/api/users", require("./routes/userRoutes"));
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+app.use(errorHandler);
 
-app.use("/api/posts", postsRoutes); // posts
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => console.log(`Server run at port ${PORT}`));
+app.listen(port, () => console.log(`Server started on port ${port}`));
